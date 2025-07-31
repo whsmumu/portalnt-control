@@ -1,6 +1,6 @@
 # **Monitoramento de Frequência**
 
-Um aplicativo para monitorar a frequência em eventos da igreja.
+Desenvolvimento web para monitoramente e gerenciamento de frequência nos cultos da igreja
 
 ## **Visão Geral**
 
