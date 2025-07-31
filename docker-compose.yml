@@ -1,0 +1,29 @@
+services:
+  frequencynovotempodb:
+    image: postgres:16
+    container_name: frequencynovotempodb
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - "5432:5432"
+    networks:
+      - frequencynovotempo-network
+
+  pgadmin4:
+    image: dpage/pgadmin4
+    container_name: pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
+    ports:
+      - "15432:80"
+    depends_on:
+      - frequencynovotempodb
+    networks:
+      - frequencynovotempo-network
+
+networks:
+  frequencynovotempo-network:
+    driver: bridge
