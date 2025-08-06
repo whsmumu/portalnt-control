@@ -23,3 +23,6 @@ primary_region = 'gig'
     method = 'GET'
     path = '/actuator/health'
     protocol = 'http'
+
+[processes]
+  app = 'sh -c "echo O_VALOR_DA_VARIAVEL_DB_URL_EH:[$DB_URL] && sleep 300"'
