@@ -10,17 +10,14 @@ import whsmumu.github.frequencyMonitoring.model.Membro;
 @Mapper(componentModel = "spring")
 public interface MembroMapper {
 
-    // Ensina o MapStruct a mapear o objeto 'celula' para 'celulaId' no DTO
     @Mapping(target = "celulaId", source = "celula.id")
     MembroResponseDTO toResponseDTO(Membro membro);
 
-    // Ignora os campos que não vêm do DTO
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "celula", ignore = true) // A célula é associada no Service
+    @Mapping(target = "celula", ignore = true) 
     @Mapping(target = "dataCriacao", ignore = true)
     Membro toEntity(MembroRequestDTO requestDTO);
 
-    // As mesmas regras se aplicam à atualização
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "celula", ignore = true)
     @Mapping(target = "dataCriacao", ignore = true)

@@ -10,6 +10,7 @@ import whsmumu.github.frequencyMonitoring.model.Celula;
 @Mapper(componentModel = "spring", uses = {MembroMapper.class, LiderMapper.class})
 public interface CelulaMapper {
 
+    
     CelulaResponseDTO toResponseDTO(Celula celula);
 
     @Mapping(target = "id", ignore = true)

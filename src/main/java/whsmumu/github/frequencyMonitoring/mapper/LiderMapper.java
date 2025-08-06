@@ -11,6 +11,7 @@ import whsmumu.github.frequencyMonitoring.model.Lider;
 @Mapper(componentModel = "spring")
 public interface LiderMapper {
 
+    
     @Mapping(source = "celula.id", target = "celulaId")
     LiderResponseDTO toResponseDTO(Lider lider);
 
