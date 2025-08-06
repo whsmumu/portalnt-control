@@ -89,24 +89,13 @@
 
     <build>
         <plugins>
-            <!-- 
-              ESTE É O PLUGIN QUE FALTAVA!
-              Ele cria um JAR executável com todas as dependências, que pode ser rodado com 'java -jar'.
-              É essencial para o deploy em plataformas como o Render.
-            -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
-
-            <!-- 
-              Este plugin configura o compilador para usar o Java 21 e
-              ativa os processadores de anotação para Lombok e MapStruct.
-            -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
