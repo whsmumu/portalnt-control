@@ -16,9 +16,11 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
+@NoArgsConstructor
 @Table(name = "frequencia")
 @EntityListeners(AuditingEntityListener.class)
 public class Frequency {
@@ -53,6 +55,5 @@ public class Frequency {
 
     @LastModifiedDate
     private LocalDateTime dataUltimaAtualizacao;
-
 
 }

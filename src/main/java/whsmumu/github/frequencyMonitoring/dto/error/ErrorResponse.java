@@ -1,4 +1,4 @@
-package whsmumu.github.frequencyMonitoring.controller.dto;
+package whsmumu.github.frequencyMonitoring.dto.error;
 
 import java.util.List;
 

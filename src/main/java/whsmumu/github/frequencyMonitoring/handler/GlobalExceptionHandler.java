@@ -1,4 +1,4 @@
-package whsmumu.github.frequencyMonitoring.controller.common;
+package whsmumu.github.frequencyMonitoring.handler;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -10,9 +10,10 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
-import whsmumu.github.frequencyMonitoring.controller.dto.ErrorField;
-import whsmumu.github.frequencyMonitoring.controller.dto.ErrorResponse;
+import whsmumu.github.frequencyMonitoring.dto.error.ErrorField;
+import whsmumu.github.frequencyMonitoring.dto.error.ErrorResponse;
 import whsmumu.github.frequencyMonitoring.exceptions.RecordDuplicateException;
 import whsmumu.github.frequencyMonitoring.exceptions.RecordNotFoundException;
 
@@ -21,7 +22,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
-    public ErrorResponse handleMethodArgumentNotValidException(MethodArgumentNotValidException error){
+    public ErrorResponse handleMethodArgumentNotValidException(MethodArgumentNotValidException error) {
         List<FieldError> fieldError = error.getFieldErrors();
         List<ErrorField> errorList = fieldError
                 .stream()
@@ -33,7 +34,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleHttpMessageNotReadableException(HttpMessageNotReadableException error) {
-       return ErrorResponse.defaultAnswer("O corpo da requisição JSON está malformado ou contém tipos de dados inválidos.");
+        return ErrorResponse
+                .defaultAnswer("O corpo da requisição JSON está malformado ou contém tipos de dados inválidos.");
     }
 
     @ExceptionHandler(RecordDuplicateException.class)
@@ -42,19 +44,17 @@ public class GlobalExceptionHandler {
         return ErrorResponse.conflict(error.getMessage());
     }
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleIllegalArgumentException(IllegalArgumentException error) {
-        String message = "O formato de um dos parâmetros fornecidos é inválido.";
-        if (error.getMessage().contains("Invalid UUID string")) {
-            message = "O formato do ID fornecido é inválido.";
-        }
-        return ErrorResponse.defaultAnswer(message);
-    }
-
     @ExceptionHandler(RecordNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleRecordNotFoundException(RecordNotFoundException error) {
         return ErrorResponse.defaultAnswer(error.getMessage());
+    }
+
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex) {
+        String message = "O parâmetro '" + ex.getName() + "' possui um formato inválido. Valor recebido: '" + ex.getValue() + "'.";
+        return ErrorResponse.defaultAnswer(message);
     }
 }

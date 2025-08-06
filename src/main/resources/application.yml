@@ -18,3 +18,5 @@ spring:
             accept-float-as-int: false
         time-zone: America/Sao_Paulo
         date-format: dd/MM/yyyy
+    mapper:
+      accept-case-insensitive-enums: true

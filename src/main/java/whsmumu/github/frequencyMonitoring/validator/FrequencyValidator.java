@@ -15,7 +15,7 @@ public class FrequencyValidator {
 
     private final FrequencyRepository frequencyRepository;
 
-    public void validator(Frequency frequency){
+    public void validate(Frequency frequency){
         if (existsRegisteredFrequency(frequency)) {
             throw new RecordDuplicateException("Frequencia já cadastrada.");
             

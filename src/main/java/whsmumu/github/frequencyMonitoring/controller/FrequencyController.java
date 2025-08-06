@@ -7,6 +7,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,11 +20,13 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import whsmumu.github.frequencyMonitoring.controller.dto.FrequencyDTO;
-import whsmumu.github.frequencyMonitoring.exceptions.RecordNotFoundException;
+import whsmumu.github.frequencyMonitoring.dto.frequency.FrequencyRequestDTO;
+import whsmumu.github.frequencyMonitoring.dto.frequency.FrequencyResponseDTO;
+import whsmumu.github.frequencyMonitoring.mapper.FrequencyMapper;
 import whsmumu.github.frequencyMonitoring.model.Frequency;
 import whsmumu.github.frequencyMonitoring.service.FrequencyService;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.PutMapping;
 
 @RestController
@@ -32,78 +35,54 @@ import org.springframework.web.bind.annotation.PutMapping;
 public class FrequencyController {
 
     private final FrequencyService frequenciaService;
+    private final FrequencyMapper frequencyMapper;
 
     @PostMapping()
-    public ResponseEntity<Object> save(@RequestBody @Valid FrequencyDTO frequenciaDTO) {
-        Frequency frequenciaEntidade = frequenciaDTO.mapearFrequencia();
-        frequenciaService.save(frequenciaEntidade);
+    public ResponseEntity<FrequencyResponseDTO> save(@RequestBody @Valid FrequencyRequestDTO frequencyRequestDTO) {
+        Frequency frequenciaSalva = frequenciaService.save(frequencyRequestDTO);
+        FrequencyResponseDTO responseDTO = frequencyMapper.toResponseDTO(frequenciaSalva);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
-                .buildAndExpand(frequenciaEntidade.getId())
+                .buildAndExpand(frequenciaSalva.getId())
                 .toUri();
 
-        return ResponseEntity.created(location).build();
+        return ResponseEntity.created(location).body(responseDTO);
 
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteById(@PathVariable UUID id) {
-        Frequency frequency = frequenciaService.findById(id)
-                .orElseThrow(() -> new RecordNotFoundException("Frequência não encontrada."));
-
-        frequenciaService.delete(frequency);
-        return ResponseEntity.noContent().build();
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteById(@PathVariable UUID id) {
+        frequenciaService.delete(id);
     }
 
     @GetMapping
-    public ResponseEntity<List<FrequencyDTO>> findByData(
+    public ResponseEntity<List<FrequencyResponseDTO>> findAllFiltered(
             @RequestParam(required = false) @DateTimeFormat(pattern = "dd/MM/yyyy") LocalDate data,
             @RequestParam(required = false) Integer mes,
             @RequestParam(required = false) Integer ano) {
 
-        List<Frequency> resultado;
+        List<Frequency> frequencias = frequenciaService.findAllFiltered(data, mes, ano);
 
-        if (data != null) {
-            resultado = frequenciaService.findByData(data);
-
-        } else if (ano != null && mes != null) {
-            resultado = frequenciaService.findByMonthAndYear(mes, ano);
-        } else if (ano != null) {
-            resultado = frequenciaService.findByYear(ano);
-
-        } else {
-            resultado = frequenciaService.findAll();
-        }
-
-        List<FrequencyDTO> lista = resultado
-                .stream()
-                .map(frequencia -> new FrequencyDTO(frequencia.getId(), frequencia.getData(),
-                        frequencia.getQuantidadeMembrosHomem(),
-                        frequencia.getQuantidadeMembrosMulheres(), frequencia.getQuantidadeVisitantesHomem(),
-                        frequencia.getQuantidadeVisitantesMulher(), frequencia.getQuantidadeKids(),
-                        frequencia.getQuantidadeBaby()))
+        List<FrequencyResponseDTO> responseList = frequencias.stream()
+                .map(frequencyMapper::toResponseDTO)
                 .collect(Collectors.toList());
 
-        return ResponseEntity.ok(lista);
+        return ResponseEntity.ok(responseList);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> update(@PathVariable UUID id, @RequestBody @Valid FrequencyDTO frequenciaDTO) {
-        Frequency frequencia = frequenciaService.findById(id)
-                .orElseThrow(() -> new RecordNotFoundException("Frequência não encontrada para atualização."));
+    public ResponseEntity<FrequencyResponseDTO> update(@PathVariable UUID id, @RequestBody @Valid FrequencyRequestDTO frequenciaDTO) {
+        Frequency frequenciaAtualizada = frequenciaService.update(id, frequenciaDTO);
+        FrequencyResponseDTO responseDTO = frequencyMapper.toResponseDTO(frequenciaAtualizada);
+        return ResponseEntity.ok(responseDTO);
+    }
 
-        frequencia.setData(frequenciaDTO.data());
-        frequencia.setQuantidadeMembrosHomem(frequenciaDTO.quantidadeMembrosHomem());
-        frequencia.setQuantidadeMembrosMulheres(frequenciaDTO.quantidadeMembrosMulheres());
-        frequencia.setQuantidadeVisitantesHomem(frequenciaDTO.quantidadeVisitantesHomem());
-        frequencia.setQuantidadeVisitantesMulher(frequenciaDTO.quantidadeVisitantesMulher());
-        frequencia.setQuantidadeBaby(frequenciaDTO.quantidadeBaby());
-        frequencia.setQuantidadeKids(frequenciaDTO.quantidadeKids());
-
-        frequenciaService.update(frequencia);
-        return ResponseEntity.noContent().build();
-
+    @GetMapping("/{id}")
+    public ResponseEntity<FrequencyResponseDTO> findById(@PathVariable UUID id) {
+        Frequency frequencia = frequenciaService.findById(id);
+        return ResponseEntity.ok(frequencyMapper.toResponseDTO(frequencia));
     }
 }
