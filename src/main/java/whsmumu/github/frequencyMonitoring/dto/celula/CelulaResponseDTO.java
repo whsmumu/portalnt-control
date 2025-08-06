@@ -10,6 +10,7 @@ public record CelulaResponseDTO(
     Long id,
     String name,
     String bairro,
+    String diaCelula,
     CategoriaCelula categoriaCelula,
     OffsetDateTime dataCriacao, 
     LiderResponseDTO lider, 

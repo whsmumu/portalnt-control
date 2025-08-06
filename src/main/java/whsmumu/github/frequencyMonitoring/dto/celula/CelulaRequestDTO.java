@@ -15,6 +15,9 @@ public record CelulaRequestDTO(
     @NotNull(message = "O ID do líder é obrigatório")
     Long liderId,
 
+    @NotNull(message = "O dia da célula é obrigatório")
+    String diaCelula,
+
     @NotNull(message = "A categoria da célula é obrigatória")
     CategoriaCelula categoriaCelula
 ) {

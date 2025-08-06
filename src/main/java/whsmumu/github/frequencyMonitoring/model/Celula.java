@@ -59,4 +59,7 @@ public class Celula {
     @Column(name = "created_at", updatable = false)
     private OffsetDateTime dataCriacao;
 
+    @Column(name = "dia_celula", nullable = false)
+    private String diaCelula;
+
 }
