@@ -1,18 +1,25 @@
-# **Monitoramento de Frequência**
+# **Sistema de Gestão para Igrejas - Portal NT Control**
 
-Desenvolvimento web para monitoramente e gerenciamento de frequência nos cultos da igreja
+Aplicação web para o gerenciamento integrado de membros, células, lideres e frequência nos cultos, desenvolvida par a igreja.
 
 ## **Visão Geral**
 
-Este projeto é uma aplicação web desenvolvida para registrar e gerenciar a frequência de membros e visitantes em cultos da igreja. Ele permite que os usuários insiram, visualizem, atualizem e excluam registros de frequência, fornecendo uma maneira organizada de rastrear a participação ao longo do tempo.
+Este projeto é uma plataforma de gestão robusta, criada para centralizar e simplificar a administração de informações vitais da igreja. O sistema é dividido em módulos para gerenciar Células, Lideres, Membros e a Frequência nos cultos, oferecendo uma solução completa e organizada para acompanhar o crescimento e o engajamento da comunidade.
 
-### **Principais Funcionalidades**
+### **Módulos do Sistema**
 
-* **Registro de Frequência:** Adicione novos registros de frequência com detalhes sobre o número de membros e visitantes.
-* **Visualização de Dados:** Consulte os registros de frequência por data, mês ou ano.
-* **Gerenciamento de Registros:** Atualize ou exclua registros de frequência existentes.
-* **Validação de Dados:** Garante a integridade dos dados, prevenindo registros duplicados para a mesma data.
-* **API RESTful:** Oferece endpoints para interagir com o sistema de forma programática.
+* **Gestão de Células:**
+    * Cadastro, consulta, atualização e exclusão de células (pequenos grupos).
+    * Detalhes como nome da célula, líder, membros.
+
+* **Gestão de Membros:**
+    * Cadastro completo de membros com informações pessoais (nome, e-mail, telefone, data de nascimento).
+    * Operações de CRUD (Create, Read, Update, Delete) para os membros.
+
+* **Controle de Frequência:**
+    * Registro detalhado da frequência nos cultos, segmentado por homens, mulheres, crianças e visitantes.
+    * Consulta de registros de frequência por data específica.
+    * Atualização e remoção de registros de frequência.
 
 ## **Instalação**
 
@@ -20,26 +27,26 @@ Siga as instruções abaixo para configurar e executar o projeto em seu ambiente
 
 ### **Pré-requisitos**
 
-* **Java Development Kit (JDK) 21:** Certifique-se de ter o JDK 21 instalado.
-* **Maven:** O projeto utiliza o Maven para gerenciamento de dependências.
-* **Docker e Docker Compose:** Necessário para executar o banco de dados PostgreSQL em um contêiner.
-* **Git:** Para clonar o repositório.
+* **Java Development Kit (JDK) 21**
+* **Maven**
+* **Docker e Docker Compose**
+* **Git**
 
 ### **Passos de Instalação**
 
 1.  **Clone o repositório:**
     ```sh
-    git clone https://github.com/whsmumu/frequency-monitoring.git
-    cd frequency-monitoring
+    git clone [https://github.com/seu-usuario/portalnt-control.git](https://github.com/seu-usuario/portalnt-control.git)
+    cd portalnt-control
     ```
 
 2.  **Configure as variáveis de ambiente:**
-    Crie um arquivo `.env` na raiz do projeto com base no arquivo `docker-compose.yml` e `application.yml`.
+    Crie um arquivo `.env` na raiz do projeto com base nas configurações dos arquivos `docker-compose.yml` e `application.yml`.
     ```env
     DB_USER=seu_usuario
     DB_PASSWORD=sua_senha
-    DB_NAME=seu_banco_de_dados
-    DB_URL=jdbc:postgresql://localhost:5432/seu_banco_de_dados
+    DB_NAME=gestao_igreja_db
+    DB_URL=jdbc:postgresql://localhost:5432/gestao_igreja_db
     PGADMIN_EMAIL=seu_email@exemplo.com
     PGADMIN_PASSWORD=sua_senha_pgadmin
     ```
@@ -50,70 +57,10 @@ Siga as instruções abaixo para configurar e executar o projeto em seu ambiente
     ```
 
 4.  **Execute a aplicação:**
-    Use o Maven Wrapper para compilar e executar a aplicação Spring Boot.
     ```sh
     ./mvnw spring-boot:run
     ```
-
-## **Endpoints da API**
-
-Após a instalação, a aplicação estará disponível em `http://localhost:8080`. Você pode interagir com a API.
-
-### **Criar um novo registro de frequência**
-
-* **Método:** `POST`
-* **URL:** `http://localhost:8080/frequencias`
-* **Headers:**
-    * `Content-Type`: `application/json`
-* **Body (raw, JSON):**
-    ```json
-    {
-        "data": "31/07/2025",
-        "quantidadeMembrosHomem": 50,
-        "quantidadeMembrosMulheres": 60,
-        "quantidadeVisitantesHomem": 10,
-        "quantidadeVisitantesMulher": 15,
-        "quantidadeKids": 20,
-        "quantidadeBaby": 5
-    }
-    ```
-
-### **Obter todos os registros**
-
-* **Método:** `GET`
-* **URL:** `http://localhost:8080/frequencias`
-
-### **Obter registros por data**
-
-* **Método:** `GET`
-* **URL:** `http://localhost:8080/frequencias`
-* **Params:**
-    * Key: `data`, Value: `31/07/2025`
-
-### **Atualizar um registro existente**
-
-* **Método:** `PUT`
-* **URL:** `http://localhost:8080/frequencias/{id}` (substitua `{id}` pelo ID do registro)
-* **Headers:**
-    * `Content-Type`: `application/json`
-* **Body (raw, JSON):**
-    ```json
-    {
-        "data": "31/07/2025",
-        "quantidadeMembrosHomem": 55,
-        "quantidadeMembrosMulheres": 65,
-        "quantidadeVisitantesHomem": 12,
-        "quantidadeVisitantesMulher": 18,
-        "quantidadeKids": 22,
-        "quantidadeBaby": 6
-    }
-    ```
-
-### **Excluir um registro**
-
-* **Método:** `DELETE`
-* **URL:** `http://localhost:8080/frequencias/{id}` (substitua `{id}` pelo ID do registro)
-
+    
 ## **Tecnologias Utilizadas**
 
 * **Backend:** Java 21
@@ -121,58 +68,3 @@ Após a instalação, a aplicação estará disponível em `http://localhost:808
 * **Banco de Dados:** PostgreSQL
 * **Gerenciamento de Dependências:** Maven
 * **Contêiner:** Docker
-
-### **Dependências do Spring Boot**
-
-* `spring-boot-starter-data-jpa`: Para persistência de dados com JPA.
-* `spring-boot-starter-validation`: Para validação de dados nos DTOs.
-* `spring-boot-starter-web`: Para criar aplicações web e APIs RESTful.
-* `spring-boot-devtools`: Para facilitar o desenvolvimento (ex: live reload).
-* `postgresql`: Driver JDBC para o PostgreSQL.
-* `lombok`: Para reduzir código boilerplate (getters, setters, etc.).
-
-## **Estrutura de Pastas**
-
-```
-frequency-monitoring/
-├── .mvn/
-│   └── wrapper/
-│       └── maven-wrapper.properties
-├── src/
-│   ├── main/
-│   │   ├── java/
-│   │   │   └── whsmumu/github/frequencyMonitoring/
-│   │   │       ├── controller/
-│   │   │       │   ├── common/
-│   │   │       │   │   └── GlobalExceptionHandler.java
-│   │   │       │   ├── dto/
-│   │   │       │   │   ├── ErrorField.java
-│   │   │       │   │   ├── ErrorResponse.java
-│   │   │       │   │   └── FrequencyDTO.java
-│   │   │       │   └── FrequencyController.java
-│   │   │       ├── exceptions/
-│   │   │       │   ├── RecordDuplicateException.java
-│   │   │       │   └── RecordNotFoundException.java
-│   │   │       ├── model/
-│   │   │       │   └── Frequency.java
-│   │   │       ├── repository/
-│   │   │       │   └── FrequencyRepository.java
-│   │   │       ├── service/
-│   │   │       │   └── FrequencyService.java
-│   │   │       ├── validator/
-│   │   │       │   └── FrequencyValidator.java
-│   │   │       └── FrequencyMonitoringApplication.java
-│   │   └── resources/
-│   │       └── application.yml
-│   └── test/
-│       └── java/
-│           └── whsmumu/github/frequencyMonitoring/
-│               └── FrequencyMonitoringApplicationTests.java
-├── .gitattributes
-├── .gitignore
-├── docker-compose.yml
-├── mvnw
-├── mvnw.cmd
-├── pom.xml
-└── README.md
-```
