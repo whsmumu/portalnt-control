@@ -7,9 +7,9 @@ import whsmumu.github.frequencyMonitoring.dto.frequency.FrequencyRequestDTO;
 import whsmumu.github.frequencyMonitoring.dto.frequency.FrequencyResponseDTO;
 import whsmumu.github.frequencyMonitoring.model.Frequency;
 
+
 @Mapper(componentModel = "spring")
 public interface FrequencyMapper {
-    
 
     FrequencyResponseDTO toResponseDTO(Frequency frequency);
 
