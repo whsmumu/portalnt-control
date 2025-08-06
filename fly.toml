@@ -1,14 +1,9 @@
-# fly.toml file generated for frequency-monitoring on 2025-08-06T13:30:00-03:00
-
 app = 'frequency-monitoring'
-primary_region = 'gig' # Região do Rio de Janeiro (pode ser diferente para você)
-
-[build]
-  builder = "paketobuildpacks/builder-jammy-base:latest"
+primary_region = 'gig'
 
 [[services]]
   protocol = 'tcp'
-  internal_port = 8080 # Porta padrão do Spring Boot
+  internal_port = 8080
   processes = ['app']
 
   [[services.ports]]
@@ -19,13 +14,12 @@ primary_region = 'gig' # Região do Rio de Janeiro (pode ser diferente para voc�
   [[services.ports]]
     port = 443
     handlers = ['tls', 'http']
-
-  # Health Check usando o Spring Boot Actuator
+  
+  # O Health Check continua aqui para garantir que a app está saudável
   [[services.http_checks]]
     interval = '15s'
     timeout = '2s'
-    grace_period = '30s' # Tempo para a aplicação iniciar antes do 1º check
+    grace_period = '30s'
     method = 'GET'
-    path = '/actuator/health' # Endpoint do Actuator
+    path = '/actuator/health'
     protocol = 'http'
-    tls_skip_verify = false
